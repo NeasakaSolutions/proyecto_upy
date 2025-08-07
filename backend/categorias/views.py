@@ -12,15 +12,19 @@ from categorias.serializers import CategoriaSerializer
 from http import HTTPStatus
 
 class Clase1(APIView):
-
+    """Manejo de listado y creación de categorías."""
 
     def get(self, request):
+        """Devuelve todas las categorías ordenadas por id descendente."""
+
         data = Categoria.objects.order_by('-id').all()
         datos_json = CategoriaSerializer(data, many = True)
         return JsonResponse({"data": datos_json.data}, status = HTTPStatus.OK)
     
 
     def post(self, request):
+        """Crea una nueva categoría si se proporciona el nombre."""
+        # Validaciones
         if request.data.get("nombre") == None or not request.data["nombre"]:
             return JsonResponse({"estado": "error", "mensaje" : "El campo nombre es obligatorio"},
                                 status = HTTPStatus.BAD_REQUEST)
@@ -33,9 +37,11 @@ class Clase1(APIView):
 
 
 class Clase2(APIView):
-
+    """Manejo de operaciones CRUD sobre una categoría específica por id."""
 
     def get(self, request, id):
+        """Obtiene la categoría con el id especificado."""
+
         try:
             data = Categoria.objects.filter(id = id).get()
             return JsonResponse({"data": {"id": data.id ,"nombre": data.nombre, "slug": data.slug}},
@@ -45,6 +51,8 @@ class Clase2(APIView):
         
 
     def put(self, request, id):
+        """Actualiza el nombre y slug de la categoría con el id dado."""
+
         if request.data.get("nombre") == None or not request.data["nombre"]:
             return JsonResponse({"estado": "error", "mensaje" : "El campo nombre es obligatorio"},
                                 status = HTTPStatus.BAD_REQUEST)
@@ -61,6 +69,7 @@ class Clase2(APIView):
         
     
     def delete(self, request, id):
+        """Elimina la categoría con el id especificado."""
          
         try:
             data = Categoria.objects.filter(pk = id).get()

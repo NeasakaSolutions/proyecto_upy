@@ -21,14 +21,18 @@ import os
 
 
 class Clase1(APIView):
+    """Lista o crea registros de blogs."""
 
     def get (self, request):
+        """Devuelve todos los blogs ordenados por id descendente."""
+
         data = Blog.objects.order_by('-id').all()
         datos_json = BlogSerializer(data, many = True)
         return JsonResponse({"data": datos_json.data})
     
 
     def post(self, request):
+        """Crea un nuevo blog con los datos proporcionados."""
 
         try:
             pdf_file = request.FILES.get('pdf')
@@ -49,8 +53,10 @@ class Clase1(APIView):
             raise Http404
 
 class Clase2(APIView):
+    """Obtiene detalles de un blog específico por id."""
 
     def get (self, request, id):
+        """Devuelve la información detallada de un blog."""
         
         try:
             data = Blog.objects.filter(id = id).get()
